@@ -40,12 +40,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Mr6pets/litefetch.git"
+    "url": "git+https://github.com/Mr6pets/smartlitefetch.git"
   },
   "bugs": {
-    "url": "https://github.com/Mr6pets/litefetch/issues"
+    "url": "https://github.com/Mr6pets/smartlitefetch/issues"
   },
-  "homepage": "https://github.com/Mr6pets/litefetch#readme",
+  "homepage": "https://github.com/Mr6pets/smartlitefetch#readme",
   "dependencies": {
     "node-fetch": "^2.7.0"
   },
