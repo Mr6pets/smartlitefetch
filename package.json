@@ -1,21 +1,54 @@
 {
   "name": "litefetch",
-  "version": "1.0.4",
-  "description": "A common and convenient HTTP request module",
-  "main": "index.js",
+  "version": "2.0.0",
+  "description": "A powerful HTTP request library with support for both node-fetch 2.x and 3.x",
+  "main": "src/v2/index.js",
+  "exports": {
+    ".": {
+      "import": "./src/v3/index.js",
+      "require": "./src/v2/index.js"
+    },
+    "./v2": "./src/v2/index.js",
+    "./v3": "./src/v3/index.js"
+  },
+  "engines": {
+    "node": ">= 10.0.0"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npm run test:v2 && npm run test:v3",
+    "test:v2": "node examples/v2-example.js",
+    "test:v3": "node examples/v3-example.js",
+    "lint": "eslint src/",
+    "format": "prettier --write src/"
   },
   "keywords": [
     "fetch",
     "http",
     "request",
     "lite",
-    "api"
+    "api",
+    "node-fetch",
+    "v2",
+    "v3",
+    "compatibility",
+    "commonjs",
+    "esm"
   ],
   "author": "alvisliu",
   "license": "MIT",
   "dependencies": {
-    "node-fetch": "^2.6.0"
-  }
+    "node-fetch": "^2.7.0"
+  },
+  "optionalDependencies": {
+    "node-fetch-v3": "npm:node-fetch@^3.3.2"
+  },
+  "peerDependencies": {
+    "node-fetch": "^2.6.0 || ^3.0.0"
+  },
+  "files": [
+    "src/",
+    "examples/",
+    "README.md",
+    "LICENSE"
+  ]
 }
