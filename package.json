@@ -1,14 +1,17 @@
 {
-  "name": "alvisliu-fetch",
+  "name": "litefetch",
   "version": "1.0.4",
-  "description": "Convenient request module",
+  "description": "A common and convenient HTTP request module",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
     "fetch",
-    "alvisliu"
+    "http",
+    "request",
+    "lite",
+    "api"
   ],
   "author": "alvisliu",
   "license": "MIT",
