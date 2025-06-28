@@ -1,5 +1,5 @@
 {
-  "name": "smartlitefetch",
+  "name": "litefetch",
   "version": "2.0.0",
   "description": "A powerful HTTP request library with support for both node-fetch 2.x and 3.x",
   "main": "src/v2/index.js",
