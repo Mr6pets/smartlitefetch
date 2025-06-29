@@ -1,5 +1,7 @@
 import fetch from 'node-fetch';
 import { URL } from 'url';
+import dns from 'dns';
+import net from 'net';
 
 // 默认配置
 const defaultConfig = {
@@ -19,6 +21,21 @@ const interceptors = {
   request: [],
   response: []
 };
+
+// checkPort 函数定义
+async function checkPort(host, port) {
+  return new Promise((resolve) => {
+    const socket = net.createConnection({
+      host,
+      port
+    });
+    socket.on('connect', () => {
+      socket.end();
+      resolve(true);
+    });
+    socket.on('error', () => resolve(false));
+  });
+}
 
 class LiteFetchV3 {
   constructor(config = {}) {
@@ -121,6 +138,7 @@ class LiteFetchV3 {
 // 创建默认实例
 const litefetch = new LiteFetchV3();
 
+// 导出
 // 导出
 export default litefetch;
 export const get = litefetch.get.bind(litefetch);

@@ -99,7 +99,15 @@ class LiteFetchV2 {
   }
 
   async post(url, data, options = {}) {
-    return this.request(url, { ...options, method: 'POST', body: data });
+    return this.request(url, {
+        ...options,
+        method: 'POST',
+        body: typeof data === 'object' && data !== null ? JSON.stringify(data) : data,
+        headers: {
+            'Content-Type': 'application/json',
+            ...(options && options.headers)
+        }
+    });
   }
 
   async put(url, data, options = {}) {

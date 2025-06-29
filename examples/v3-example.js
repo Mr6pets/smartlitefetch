@@ -284,3 +284,22 @@ export {
   streamExample,
   runAllExamples
 };
+
+
+const checkNetwork = async () => {
+  try {
+    const dnsRes = await fetch('https://dns.google/resolve?name=jsonplaceholder.typicode.com');
+    console.log('DNS 解析结果:', await dnsRes.json());
+    
+    const pingRes = await fetch('https://httpbin.org/delay/1');
+    console.log('网络延迟测试:', pingRes.ok);
+  } catch (e) {
+    console.error('网络诊断失败:', e);
+  }
+};
+
+// 在文件开头添加
+if (process.version.match(/v(16|18|20)/)) {
+  console.error('❌ 需要Node.js 18+');
+  process.exit(1);
+}

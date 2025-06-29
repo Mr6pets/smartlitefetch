@@ -1,37 +1,19 @@
 # smartLiteFetch
 
-[![npm version](https://badge.fury.io/js/litefetch.svg)](https://badge.fury.io/js/litefetch)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Downloads](https://img.shields.io/npm/dm/litefetch.svg)](https://www.npmjs.com/package/litefetch)
-
-一个强大的 HTTP 请求库，同时支持 node-fetch 2.x 和 3.x 版本，提供便捷的 RESTful API 调用方法。
-
-A powerful HTTP request library with support for both node-fetch 2.x and 3.x, providing convenient RESTful API calling methods.
-
-## ✨ 特性 Features
-
-- 🚀 **简单易用** - 简洁的 API 设计，开箱即用
-- 📦 **轻量级** - 基于 node-fetch，体积小巧
-- 🔄 **全面支持** - 支持所有常用的 HTTP 方法（GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS）
-- 🛡️ **错误处理** - 内置完善的错误处理机制
-- ⚡ **现代化** - 完全支持 Promise/async-await
-- 🎯 **自动解析** - 智能识别并解析 JSON 响应
-- 🔧 **多版本兼容** - 同时支持 CommonJS (v2) 和 ESM (v3) 模块系统
-- 🔄 **自动重试** - 内置指数退避重试机制
-- 📡 **拦截器支持** - 请求和响应拦截器
-- ⏱️ **超时控制** - 灵活的超时设置
+[![npm version](https://badge.fury.io/js/smartlitefetch.svg)](https://badge.fury.io/js/smartlitefetch)
+[![Downloads](https://img.shields.io/npm/dm/smartlitefetch.svg)](https://www.npmjs.com/package/smartlitefetch)
 
 ## 📦 安装 Installation
 
 ```bash
 # 使用 npm
-npm install litefetch --save
+npm install smartlitefetch --save
 
 # 使用 yarn
-yarn add litefetch
+yarn add smartlitefetch
 
 # 使用 pnpm
-pnpm add litefetch
+pnpm add smartlitefetch
 ```
 
 ## 🔧 版本选择 Version Selection
@@ -39,18 +21,18 @@ LiteFetch 2.0+ 支持两种模块系统：
 自动选择（推荐）
 ```bash
 // CommonJS 项目自动使用 v2 (node-fetch 2.x)
-const { get, post } = require('litefetch');
+const { get, post } = require('smartlitefetch');
 
 // ESM 项目自动使用 v3 (node-fetch 3.x)
-import { get, post } from 'litefetch';
+import { get, post } from 'smartlitefetch';
 ```
 手动指定版本
 ```bash
 // 强制使用 v2 (CommonJS + node-fetch 2.x)
-const { get, post } = require('litefetch/v2');
+const { get, post } = require('smartlitefetch/v2');
 
 // 强制使用 v3 (ESM + node-fetch 3.x)
-import { get, post } from 'litefetch/v3';
+import { get, post } from 'smartlitefetch/v3';
 ```
 版本对比
 | 特性      | V2 (CommonJS) | V3 (ESM)   |
@@ -65,10 +47,10 @@ import { get, post } from 'litefetch/v3';
 ### 🚀 快速开始 Quick Start
 ~~~js
 // V2 (CommonJS)
-const { get, post, put, delete: del } = require('litefetch');
+const { get, post, put, delete: del } = require('smartlitefetch');
 
 // V3 (ESM)
-import { get, post, put, delete as del } from 'litefetch';
+import { get, post, put, delete as del } from 'smartlitefetch';
 
 // GET 请求
 const users = await get('https://jsonplaceholder.typicode.com/users');
@@ -98,10 +80,10 @@ const result = await del('https://jsonplaceholder.typicode.com/users/1');
 ## 📖 API 文档 API Documentation
 ~~~js
 // V2
-const { create } = require('litefetch');
+const { create } = require('smartlitefetch');
 
 // V3
-import { create } from 'litefetch';
+import { create } from 'smartlitefetch';
 
 const apiClient = create({
   baseURL: 'https://api.example.com',
@@ -259,8 +241,8 @@ Fork 本仓库
 ### 开发指南
 ~~~js
 # 克隆仓库
-git clone https://github.com/your-username/litefetch.git
-cd litefetch
+git clone https://github.com/Mr6pets/smartlitefetch.git
+cd smartlitefetch
 
 # 安装依赖
 npm install
@@ -277,9 +259,9 @@ npm run test:v3
 
 ### 🔗 相关链接 Links
 
-- npm 包
-- node-fetch 2.x 文档
-- node-fetch 3.x 文档
-- GitHub 仓库
+- [npm 包](https://www.npmjs.com/package/smartlitefetch)
+- [node-fetch 2.x 文档](https://github.com/node-fetch/node-fetch/tree/2.x)
+- [node-fetch 3.x 文档](https://github.com/node-fetch/node-fetch)
+- [GitHub 仓库](https://github.com/Mr6pets/smartlitefetch)
 
 如果这个项目对你有帮助，请给它一个 ⭐️！

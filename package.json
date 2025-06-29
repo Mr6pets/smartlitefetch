@@ -2,17 +2,21 @@
   "name": "smartlitefetch",
   "version": "2.0.1",
   "description": "A powerful HTTP request library with support for both node-fetch 2.x and 3.x",
-  "main": "src/v2/index.js",
+  "type": "module",
+  "main": "./index.js",
+  "workspaces": [
+    "src/v2",
+    "src/v3"
+  ],
   "exports": {
-    ".": {
-      "import": "./src/v3/index.js",
-      "require": "./src/v2/index.js"
-    },
-    "./v2": "./src/v2/index.js",
-    "./v3": "./src/v3/index.js"
+    "./v2": "./src/v2/index.cjs",
+    "./v3": {
+      "types": "./src/v3/index.d.ts",
+      "import": "./src/v3/index.js"
+    }
   },
   "engines": {
-    "node": ">= 10.0.0"
+    "node": ">= 18.0.0"
   },
   "scripts": {
     "test": "npm run test:v2 && npm run test:v3",
@@ -46,15 +50,6 @@
     "url": "https://github.com/Mr6pets/smartlitefetch/issues"
   },
   "homepage": "https://github.com/Mr6pets/smartlitefetch#readme",
-  "dependencies": {
-    "node-fetch": "^2.7.0"
-  },
-  "optionalDependencies": {
-    "node-fetch-v3": "npm:node-fetch@^3.3.2"
-  },
-  "peerDependencies": {
-    "node-fetch": "^2.6.0 || ^3.0.0"
-  },
   "files": [
     "src/",
     "examples/",

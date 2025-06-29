@@ -1,23 +1,9 @@
 {
-  "name": "litefetch-v2",
-  "version": "2.0.0",
-  "description": "LiteFetch V2 - CommonJS version with node-fetch 2.x support",
-  "main": "index.js",
+  "name": "@smartlitefetch/v2",
+  "version": "1.0.0",
   "type": "commonjs",
-  "engines": {
-    "node": ">= 10.0.0"
-  },
-  "keywords": [
-    "fetch",
-    "http",
-    "request",
-    "commonjs",
-    "node-fetch-2"
-  ],
+  "main": "index.cjs",
   "dependencies": {
     "node-fetch": "^2.7.0"
-  },
-  "peerDependencies": {
-    "node-fetch": "^2.6.0"
   }
 }

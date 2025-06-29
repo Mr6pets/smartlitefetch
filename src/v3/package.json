@@ -1,23 +1,9 @@
 {
-  "name": "litefetch-v3",
-  "version": "2.0.0",
-  "description": "LiteFetch V3 - ESM version with node-fetch 3.x support",
-  "main": "index.js",
+  "name": "@smartlitefetch/v3",
+  "version": "1.0.0",
   "type": "module",
-  "engines": {
-    "node": ">= 12.20.0"
-  },
-  "keywords": [
-    "fetch",
-    "http",
-    "request",
-    "esm",
-    "node-fetch-3"
-  ],
+  "main": "index.js",
   "dependencies": {
     "node-fetch": "^3.3.2"
-  },
-  "peerDependencies": {
-    "node-fetch": "^3.0.0"
   }
 }

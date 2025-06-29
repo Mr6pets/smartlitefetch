@@ -1,6 +1,7 @@
 // LiteFetch V2 (CommonJS) 使用示例
-const { get, post, put, delete: del, create, LiteFetch } = require('../src/v2');
-const https = require('https');
+import { get, post, put, delete as del, create, LiteFetch } from '../src/v2/index.cjs';
+import https from 'https';
+import { pathToFileURL } from 'url';
 
 console.log('🚀 LiteFetch V2 (CommonJS) 示例开始\n');
 
@@ -235,13 +236,13 @@ async function runAllExamples() {
   console.log('='.repeat(50));
 }
 
-// 如果直接运行此文件
-if (require.main === module) {
+// 如果直接运行此文件 (ES 模块版本)
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   runAllExamples().catch(console.error);
 }
 
-// 导出示例函数供其他文件使用
-module.exports = {
+// 导出示例函数供其他文件使用 (ES 模块版本)
+export {
   basicGetExample,
   postExample,
   customConfigExample,

@@ -263,5 +263,8 @@ module.exports.race = litefetch.race.bind(litefetch);
 module.exports.batch = litefetch.batch.bind(litefetch);
 module.exports.create = litefetch.create.bind(litefetch);
 
+export { default as v2 } from './src/v2/index.cjs';
+export { default as v3 } from './src/v3/index.js';
+
 
 
