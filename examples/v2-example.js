@@ -1,5 +1,6 @@
 // LiteFetch V2 (CommonJS) 使用示例
 const { get, post, put, delete: del, create, LiteFetch } = require('../src/v2');
+const https = require('https');
 
 console.log('🚀 LiteFetch V2 (CommonJS) 示例开始\n');
 
@@ -7,7 +8,9 @@ console.log('🚀 LiteFetch V2 (CommonJS) 示例开始\n');
 async function basicGetExample() {
   console.log('📡 示例 1: 基础 GET 请求');
   try {
-    const response = await get('https://jsonplaceholder.typicode.com/posts/1');
+    // 创建一个禁用 keep-alive 的 agent 来进行诊断
+    const agent = new https.Agent({ keepAlive: false });
+    const response = await get('https://jsonplaceholder.typicode.com/posts/1', { agent });
     console.log('✅ 成功:', response.data.title);
   } catch (error) {
     handleError(error, '基础 GET 请求');
@@ -188,15 +191,26 @@ async function concurrentExample() {
 
 // 统一的错误处理函数
 function handleError(error, context) {
-  if (error.code === 'ENOTFOUND' || error.code === 'ECONNREFUSED') {
-    console.error(`❌ ${context} - 网络连接错误:`, error.message);
+  console.error(`❌ 在 '${context}' 中发生错误`);
+  if (error.code === 'ECONNRESET') {
+    console.error('  - 错误类型: 连接被重置 (ECONNRESET)');
+    console.error('  - 错误消息:', error.message);
+    console.error('  - 这通常是由于网络问题、防火墙或服务器提前关闭连接引起的。');
+  } else if (error.code === 'ENOTFOUND' || error.code === 'ECONNREFUSED') {
+    console.error(`  - 错误类型: 网络连接错误 (${error.code})`);
+    console.error('  - 错误消息:', error.message);
   } else if (error.name === 'TimeoutError') {
-    console.error(`❌ ${context} - 请求超时:`, error.message);
+    console.error('  - 错误类型: 请求超时');
+    console.error('  - 错误消息:', error.message);
   } else if (error.response && error.response.status >= 400) {
-    console.error(`❌ ${context} - HTTP错误 ${error.response.status}:`, error.message);
+    console.error(`  - 错误类型: HTTP 错误 (状态码: ${error.response.status})`);
+    console.error('  - 错误消息:', error.message);
   } else {
-    console.error(`❌ ${context} - 错误:`, error.message);
+    console.error('  - 未知错误:');
+    console.error('  - 错误消息:', error.message);
   }
+  // 为了方便调试，打印完整的错误对象
+  console.error('  - 完整错误对象:', error);
 }
 
 // 运行所有示例

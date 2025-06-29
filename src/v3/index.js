@@ -123,6 +123,10 @@ const litefetch = new LiteFetchV3();
 
 // 导出
 export default litefetch;
-export const { get, post, put, delete: del, request } = litefetch;
+export const get = litefetch.get.bind(litefetch);
+export const post = litefetch.post.bind(litefetch);
+export const put = litefetch.put.bind(litefetch);
+export const del = litefetch.delete.bind(litefetch);
+export const request = litefetch.request.bind(litefetch);
 export const LiteFetch = LiteFetchV3;
 export const create = (config) => new LiteFetchV3(config);
