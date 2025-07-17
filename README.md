@@ -45,7 +45,7 @@ import { get, post } from 'smartlitefetch/v3';
 | 推荐场景 | 传统项目    | 现代项目  |
 
 ### 🚀 快速开始 Quick Start
-~~~js
+```js
 // V2 (CommonJS)
 const { get, post, put, delete: del } = require('smartlitefetch');
 
@@ -63,22 +63,10 @@ const newUser = await post('https://jsonplaceholder.typicode.com/users', {
     email: 'john@example.com'
   }
 });
-
-// PUT 请求
-const updatedUser = await put('https://jsonplaceholder.typicode.com/users/1', {
-  body: {
-    name: 'Jane Doe',
-    email: 'jane@example.com'
-  }
-});
-
-// DELETE 请求
-const result = await del('https://jsonplaceholder.typicode.com/users/1');
-~~~
-
+```
 
 ## 📖 API 文档 API Documentation
-~~~js
+```js
 // V2
 const { create } = require('smartlitefetch');
 
@@ -94,9 +82,9 @@ const apiClient = create({
     'User-Agent': 'MyApp/1.0'
   }
 });
-~~~
-### 1.请求/响应拦截器
-~~~javascript
+```
+### 1. 请求/响应拦截器
+```javascript
 // 请求拦截器 - 添加认证
 apiClient.addRequestInterceptor((config) => {
   config.headers.Authorization = `Bearer ${getToken()}`;
@@ -112,17 +100,17 @@ apiClient.addResponseInterceptor((response) => {
   }
   return response;
 });
-~~~
+```
 ### 2. 自动重试机制
-~~~javascript
+```javascript
 // 自动重试，指数退避
 const data = await get('https://api.example.com/data', {
   retries: 5,
   retryDelay: 1000 // 初始延迟 1 秒，每次重试翻倍
 });
-~~~
-### 3.超时控制
-~~~javascript
+```
+### 3. 超时控制
+```javascript
 // V2: 使用 setTimeout
 const data = await get('https://api.example.com/slow-endpoint', {
   timeout: 5000 // 5秒超时
@@ -134,35 +122,42 @@ setTimeout(() => controller.abort(), 5000);
 
 const data = await get('https://api.example.com/slow-endpoint', {
   signal: controller.signal
-});;
-~~~
-### 4.超时控制
-~~~javascript
-// 设置超时时间
-const data = await get('https://api.example.com/slow-endpoint', {
-  timeout: 5000 // 5秒超时
 });
-~~~
-### 5.更多 HTTP 方法
-~~~javascript
+```
+### 4. 缓存机制
+启用缓存以减少重复请求：
+```javascript
+// 启用缓存，设置缓存时间 5 分钟
+const data = await get('https://api.example.com/data', {
+  cache: true,
+  cacheTime: 300000
+});
+```
+### 5. 端口检查
+在请求前自动检查主机端口是否开放：
+```javascript
+// 会抛出错误如果端口不可用
+const data = await get('https://api.example.com');
+```
+### 6. FormData 支持
+支持表单数据和文件上传（v3 支持 FormData，v2 使用 URLSearchParams）：
+```javascript
+// v3 示例
+const form = new FormData();
+form.append('file', fs.createReadStream('file.txt'));
+await post('https://api.example.com/upload', { body: form });
+```
+### 7. 更多 HTTP 方法
+```javascript
 // PATCH 请求
 const updated = await patch('/users/1', {
   body: { name: 'New Name' }
 });
-
-// HEAD 请求
-const headers = await head('/users/1');
-console.log(headers.headers);
-
-// OPTIONS 请求
-const options = await options('/api/endpoint');
-console.log(options.headers.get('Allow'));
-~~~
-
+```
 
 ### ⚙️ 配置选项 Configuration Options
 所有方法都支持 node-fetch 的配置选项：
-~~~javascript
+```javascript
 const config = {
   timeout: 5000,        // 超时时间 (毫秒)
   retries: 3,           // 重试次数
@@ -179,10 +174,10 @@ const config = {
 };
 
 const data = await get('https://api.example.com/data', config);
-~~~
+```
 
 ### 错误处理
-~~~javascript
+```javascript
 try {
   const data = await get('https://api.example.com/data');
   console.log(data.data);
@@ -195,7 +190,7 @@ try {
     console.error('请求失败:', error.message);
   }
 }
-~~~
+```
 ### 📝 注意事项 Notes
 
 #### V2 (CommonJS) 注意事项
