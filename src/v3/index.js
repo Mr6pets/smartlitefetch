@@ -57,6 +57,24 @@ class LiteFetchV3 {
   // 核心请求方法 (支持 AbortController)
   async request(url, options = {}) {
     const config = { ...this.config, ...options };
+    const parsedUrl = new URL(url);
+    const port = parsedUrl.port || (parsedUrl.protocol === 'https:' ? 443 : 80);
+    
+    // 检查端口
+    const portOpen = await checkPort(parsedUrl.hostname, port);
+    if (!portOpen) {
+      throw new Error(`Port ${port} on ${parsedUrl.hostname} is not open`);
+    }
+    
+    const cacheKey = `${config.method || 'GET'}:${url}`; // 生成缓存键
+    
+    // 检查缓存
+    if (config.cache) {
+      const cached = cache.get(cacheKey);
+      if (cached && (Date.now() - cached.timestamp < config.cacheTime)) {
+        return cached.data;
+      }
+    }
     
     let lastError;
     for (let attempt = 0; attempt <= config.retries; attempt++) {
@@ -65,18 +83,27 @@ class LiteFetchV3 {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), config.timeout);
 
-        const fetchOptions = {
+        let fetchOptions = {
           method: config.method || 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            ...config.headers
-          },
+          headers: { 'Content-Type': 'application/json', ...config.headers },
           signal: controller.signal,
           ...config
         };
+        
+        // 执行请求拦截器
+        for (const interceptor of interceptors.request) {
+          fetchOptions = await interceptor(fetchOptions) || fetchOptions;
+        }
 
-        if (config.body && typeof config.body === 'object') {
-          fetchOptions.body = JSON.stringify(config.body);
+        if (config.body) {
+          if (config.body instanceof FormData) {
+            fetchOptions.body = config.body;
+            delete fetchOptions.headers['Content-Type']; // FormData 会自动设置
+          } else if (typeof config.body === 'object') {
+            fetchOptions.body = JSON.stringify(config.body);
+          } else {
+            fetchOptions.body = config.body;
+          }
         }
 
         const response = await fetch(url, fetchOptions);
@@ -97,12 +124,19 @@ class LiteFetchV3 {
           data = await response.buffer();
         }
 
-        return {
-          data,
-          status: response.status,
-          statusText: response.statusText,
-          headers: response.headers
-        };
+        // 缓存响应
+        if (config.cache) {
+          cache.set(cacheKey, { data: { data, status: response.status, statusText: response.statusText, headers: response.headers }, timestamp: Date.now() });
+        }
+
+        let result = { data, status: response.status, statusText: response.statusText, headers: response.headers };
+
+        // 执行响应拦截器
+        for (const interceptor of interceptors.response) {
+          result = await interceptor(result) || result;
+        }
+
+        return { data, status: response.status, statusText: response.statusText, headers: response.headers };
       } catch (error) {
         lastError = error;
         

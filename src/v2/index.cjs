@@ -1,5 +1,7 @@
 const fetch = require('node-fetch');
 const { URL } = require('url');
+const dns = require('dns'); // 新增（如果需要 DNS 相关，可选）
+const net = require('net'); // 新增，用于端口检查
 
 // 默认配置
 const defaultConfig = {
@@ -19,6 +21,18 @@ const interceptors = {
   request: [],
   response: []
 };
+
+// checkPort 函数定义
+async function checkPort(host, port) {
+  return new Promise((resolve) => {
+    const socket = net.createConnection({ host, port });
+    socket.on('connect', () => {
+      socket.end();
+      resolve(true);
+    });
+    socket.on('error', () => resolve(false));
+  });
+}
 
 class LiteFetchV2 {
   constructor(config = {}) {
@@ -40,22 +54,49 @@ class LiteFetchV2 {
   // 核心请求方法
   async request(url, options = {}) {
     const config = { ...this.config, ...options };
+    const parsedUrl = new URL(url);
+    const port = parsedUrl.port || (parsedUrl.protocol === 'https:' ? 443 : 80);
+    
+    // 检查端口
+    const portOpen = await checkPort(parsedUrl.hostname, port);
+    if (!portOpen) {
+      throw new Error(`Port ${port} on ${parsedUrl.hostname} is not open`);
+    }
+    
+    const cacheKey = `${config.method || 'GET'}:${url}`; // 生成缓存键
+    
+    // 检查缓存
+    if (config.cache) {
+      const cached = cache.get(cacheKey);
+      if (cached && (Date.now() - cached.timestamp < config.cacheTime)) {
+        return cached.data;
+      }
+    }
     
     let lastError;
     for (let attempt = 0; attempt <= config.retries; attempt++) {
       try {
-        const fetchOptions = {
+        let fetchOptions = {
           method: config.method || 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            ...config.headers
-          },
+          headers: { 'Content-Type': 'application/json', ...config.headers },
           timeout: config.timeout,
           ...config
         };
 
-        if (config.body && typeof config.body === 'object') {
-          fetchOptions.body = JSON.stringify(config.body);
+        // 执行请求拦截器
+        for (const interceptor of interceptors.request) {
+          fetchOptions = await interceptor(fetchOptions) || fetchOptions;
+        }
+
+        if (config.body) {
+          if (config.body instanceof URLSearchParams) { // 支持 FormData-like
+            fetchOptions.body = config.body.toString();
+            fetchOptions.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+          } else if (typeof config.body === 'object') {
+            fetchOptions.body = JSON.stringify(config.body);
+          } else {
+            fetchOptions.body = config.body;
+          }
         }
 
         const response = await fetch(url, fetchOptions);
@@ -73,12 +114,12 @@ class LiteFetchV2 {
           data = await response.text();
         }
 
-        return {
-          data,
-          status: response.status,
-          statusText: response.statusText,
-          headers: response.headers
-        };
+        // 缓存响应
+        if (config.cache) {
+          cache.set(cacheKey, { data: { data, status: response.status, statusText: response.statusText, headers: response.headers }, timestamp: Date.now() });
+        }
+
+        return { data, status: response.status, statusText: response.statusText, headers: response.headers };
       } catch (error) {
         lastError = error;
         
