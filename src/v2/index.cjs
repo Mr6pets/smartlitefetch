@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 const { URL } = require('url');
-const dns = require('dns'); // 新增（如果需要 DNS 相关，可选）
+// const dns = require('dns'); // 新增（如果需要 DNS 相关，可选）
 const net = require('net'); // 新增，用于端口检查
 
 // 默认配置

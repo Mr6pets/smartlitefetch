@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 import { URL } from 'url';
-import dns from 'dns';
+// 移除: import dns from 'dns';
 import net from 'net';
 
 // 默认配置
