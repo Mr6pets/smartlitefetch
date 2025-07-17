@@ -26,11 +26,12 @@
     "format": "prettier --write src/",
     "prepublishOnly": "npm test",
     "postpublish": "echo \"✅ Package published successfully!\"",
-    "deploy:github": "npm run lint && git pull --rebase origin master && git add . && git commit -m \"Update project\" && git push origin master",
+    "deploy:github": "npm run lint && git add . && (git diff --staged --quiet || git commit -m \"Update project\") && git pull --rebase origin master && git push origin master",
     "deploy:npm:patch": "npm run lint &&  npm version patch && npm publish",
     "deploy:npm:minor": "npm run lint &&  npm version minor && npm publish",
     "deploy:npm:major": "npm run lint &&  npm version major && npm publish",
-    "build": "echo Building project... && mkdir dist && cpy 'src/**' dist --parents"
+    "wind_build": "echo Building project... && if not exist dist mkdir dist && xcopy /s /e /y src\\* dist\\",
+    "build": "echo Building project... && if not exist dist mkdir dist && cpy src/**/* dist --parents"
   },
   "keywords": [
     "fetch",
