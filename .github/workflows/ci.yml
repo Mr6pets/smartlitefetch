@@ -1,0 +1,47 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Run lint
+      run: npm run lint
+
+    - name: Run tests
+      run: npm test
+
+    - name: Build project
+      run: npm run build  # 运行构建脚本
+
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-artifact
+        path: dist/  # 上传 dist 目录（根据你的构建输出调整）
+
+    - name: Deploy to NPM
+      if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+      run: npm run deploy:npm  # 假设你有 deploy:npm 脚本
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}  # 在 GitHub Secrets 中设置 NPM_TOKEN
+
+    - name: Deploy to GitHub
+      if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+      run: npm run deploy:github  # 运行你的 GitHub 部署脚本
