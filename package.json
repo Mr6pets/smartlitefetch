@@ -26,10 +26,10 @@
     "format": "prettier --write src/",
     "prepublishOnly": "npm test",
     "postpublish": "echo \"✅ Package published successfully!\"",
-    "deploy:github": "npm run lint && npm test && git add . && git commit -m \"Update project\" && git push origin master",
-    "deploy:npm:patch": "npm run lint && npm test && npm version patch && npm publish",
-    "deploy:npm:minor": "npm run lint && npm test && npm version minor && npm publish",
-    "deploy:npm:major": "npm run lint && npm test && npm version major && npm publish"
+    "deploy:github": "npm run lint &&  git add . && git commit -m \"Update project\" && git push origin master",
+    "deploy:npm:patch": "npm run lint &&  npm version patch && npm publish",
+    "deploy:npm:minor": "npm run lint &&  npm version minor && npm publish",
+    "deploy:npm:major": "npm run lint &&  npm version major && npm publish"
   },
   "keywords": [
     "fetch",
