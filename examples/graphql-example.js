@@ -1,87 +1,92 @@
 import 'dotenv/config';
 import { create } from '../src/v3/index.js';
+/* eslint-disable no-unused-vars */
 import { QueryBuilder } from '../src/v3/graphql.js';
 
-// 创建带 GraphQL 支持的客户端
+// 创建带 GraphQL 支持的客户端 - 使用公开的 Countries API
 const client = create({
   graphql: {
-    endpoint: 'https://api.github.com/graphql',
+    endpoint: 'https://countries.trevorblades.com/',
     headers: {
-      'Authorization': `Bearer ${process.env.GITHUB_TOKEN}`
+      'Content-Type': 'application/json'
     },
     introspection: true
   }
 });
 
 async function graphqlExample() {
-  console.log('=== GraphQL 示例 ===');
+  console.log('=== GraphQL 示例 (Countries API) ===');
   
   try {
-    // 1. 简单查询
-    const userQuery = `
-      query GetUser($login: String!) {
-        user(login: $login) {
+    // 1. 查询所有国家
+    const countriesQuery = `
+      query GetCountries {
+        countries {
+          code
           name
-          email
-          repositories(first: 5) {
-            nodes {
-              name
-              description
-            }
-          }
+          emoji
+          currency
         }
       }
     `;
     
-    const userData = await client.query(userQuery, { login: 'octocat' });
-    console.log('用户数据:', userData);
+    const countriesData = await client.query(countriesQuery);
     
-    // 2. 使用查询构建器
-    const builder = new QueryBuilder();
-    const builtQuery = builder
-      .query('viewer', {
-        login: true,
-        name: true,
-        repositories: {
-          args: { first: 5 }, // 添加分页参数
-          totalCount: true,
-          nodes: {
-            name: true,
-            stargazerCount: true
-          }
-        }
-      })
-      .build();
+    // 调试：打印完整响应
+    console.log('完整响应:', JSON.stringify(countriesData, null, 2));
     
-    // 2. 使用手写查询替代 QueryBuilder
-    const viewerQuery = `
-      query {
-        viewer {
-          login
-          name
-          repositories(first: 5) {
-            totalCount
-            nodes {
+    // 检查响应结构
+    if (countriesData && countriesData.data && countriesData.data.countries) {
+      console.log('前5个国家:', countriesData.data.countries.slice(0, 5));
+    } else if (countriesData && countriesData.countries) {
+      // 如果直接返回 countries 数组
+      console.log('前5个国家:', countriesData.countries.slice(0, 5));
+    } else {
+      console.log('意外的响应结构:', countriesData);
+    }
+    
+    // 2. 查询特定国家（只有在第一个查询成功时才执行）
+    if (countriesData && (countriesData.data?.countries || countriesData.countries)) {
+      const countryQuery = `
+        query GetCountry($code: ID!) {
+          country(code: $code) {
+            name
+            capital
+            emoji
+            currency
+            languages {
+              code
               name
-              stargazerCount
             }
           }
         }
+      `;
+      
+      const countryData = await client.query(countryQuery, { code: 'CN' });
+      console.log('中国信息响应:', JSON.stringify(countryData, null, 2));
+      
+      if (countryData && countryData.data && countryData.data.country) {
+        console.log('中国信息:', countryData.data.country);
+      } else if (countryData && countryData.country) {
+        console.log('中国信息:', countryData.country);
       }
-    `;
-    
-    const viewerData = await client.query(viewerQuery);
-    console.log('当前用户数据:', viewerData);
+    }
     
     // 3. 内省查询
-    const schema = await client.graphql.introspect();
-    console.log('Schema 类型数量:', schema.types.length);
+    try {
+      const schema = await client.graphql.introspect();
+      console.log('Schema 类型数量:', schema.types.length);
+    } catch (introspectError) {
+      console.log('内省查询失败:', introspectError.message);
+    }
     
   } catch (error) {
     console.error('GraphQL 错误:', error.message);
     if (error.errors) {
       console.error('详细错误:', error.errors);
     }
+    // 打印完整错误对象以便调试
+    console.error('完整错误对象:', error);
   }
 }
 
