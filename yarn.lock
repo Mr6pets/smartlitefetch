@@ -117,13 +117,13 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@smartlitefetch/v2@file:D:\\githubStore\\smartlitefetch\\src\\v2":
+"@smartlitefetch/v2@file:D:\\GitHubStore\\smartlitefetch\\src\\v2":
   version "1.0.0"
   resolved "file:src/v2"
   dependencies:
     node-fetch "^2.7.0"
 
-"@smartlitefetch/v3@file:D:\\githubStore\\smartlitefetch\\src\\v3":
+"@smartlitefetch/v3@file:D:\\GitHubStore\\smartlitefetch\\src\\v3":
   version "1.0.0"
   resolved "file:src/v3"
   dependencies:
