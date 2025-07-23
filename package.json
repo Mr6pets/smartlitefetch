@@ -1,6 +1,6 @@
 {
   "name": "smartlitefetch",
-  "version": "2.1.33",
+  "version": "2.1.34",
   "description": "A powerful HTTP request library with advanced features: caching, mocking, debugging, middleware, and support for both node-fetch 2.x and 3.x",
   "type": "module",
   "main": "./index.js",
