@@ -31,6 +31,7 @@ await post('https://api.example.com/users', { body: { name: 'John' } });
 ## API
 
 创建实例：
+
 ```js
 import { create } from 'smartlitefetch';
 const api = create({ baseURL: 'https://api.example.com' });
