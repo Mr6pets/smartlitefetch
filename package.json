@@ -1,0 +1,141 @@
+{
+  "name": "smartlitefetch",
+  "version": "2.1.31",
+  "description": "A powerful HTTP request library with advanced features: caching, mocking, debugging, middleware, and support for both node-fetch 2.x and 3.x",
+  "type": "module",
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "typings": "./index.d.ts",
+  "workspaces": [
+    "src/v2",
+    "src/v3"
+  ],
+  "exports": {
+    "./v2": {
+      "types": "./src/v2/index.d.ts",
+      "require": "./src/v2/index.cjs"
+    },
+    "./v3": {
+      "types": "./src/v3/index.d.ts",
+      "import": "./src/v3/index.js"
+    },
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    }
+  },
+  "engines": {
+    "node": ">= 18.0.0"
+  },
+  "scripts": {
+    "test": "npm run test:v2 && npm run test:v3 && npm run test:examples",
+    "test:v2": "node examples/v2-example.js",
+    "test:v3": "node examples/v3-example.js",
+    "test:examples": "node examples/cache-example.js && node examples/middleware-example.js && node examples/mock-test-example.js && node examples/v2-example.js && node examples/v3-example.js && node examples/graphql-example.js && node examples/failover-example.js",
+    "test:mock": "node examples/mock-test-example.js",
+    "test:cache": "node examples/cache-example.js",
+    "test:failover": "node examples/failover-example.js",
+    "test:graphql": "node examples/graphql-example.js",
+    "test:debug": "node examples/debug-example.js",
+    "test:middleware": "node examples/middleware-example.js",
+    "lint": "eslint src/ examples/",
+    "lint:fix": "eslint src/ examples/ --fix",
+    "format": "prettier --write src/ examples/",
+    "format:check": "prettier --check src/ examples/",
+    "prepublishOnly": "npm run lint && npm run type-check && npm test",
+    "postpublish": "echo \"✅ Package published successfully!\"",
+    "deploy:github": "npm run lint && npm run type-check && git add . && (git diff --staged --quiet || git commit -m \"Update project\") && git pull --rebase origin master && git push origin master",
+    "deploy:npm:patch": "npm run lint && npm run type-check && npm version patch && npm publish",
+    "deploy:npm:minor": "npm run lint && npm run type-check && npm version minor && npm publish",
+    "deploy:npm:major": "npm run lint && npm run type-check && npm version major && npm publish",
+    "build": "echo Building project... && if not exist dist mkdir dist && cpy src/**/* dist --parents",
+    "build:clean": "if exist dist rmdir /s /q dist",
+    "build:full": "npm run build:clean && npm run build && npm run build:types",
+    "type-check": "tsc --noEmit",
+    "build:types": "tsc --declaration --emitDeclarationOnly --outDir types",
+    "dev": "node --watch examples/v3-example.js",
+    "benchmark": "node examples/mock-test-example.js",
+    "docs:generate": "echo \"Generating documentation...\"",
+    "clean": "npm run build:clean && if exist node_modules\\.cache rmdir /s /q node_modules\\.cache"
+  },
+  "keywords": [
+    "fetch",
+    "http",
+    "request",
+    "lite",
+    "api",
+    "node-fetch",
+    "v2",
+    "v3",
+    "compatibility",
+    "commonjs",
+    "esm",
+    "cache",
+    "caching",
+    "mock",
+    "mocking",
+    "test",
+    "testing",
+    "debug",
+    "debugging",
+    "middleware",
+    "interceptor",
+    "performance",
+    "monitoring",
+    "har",
+    "lru",
+    "stale-while-revalidate",
+    "typescript",
+    "types"
+  ],
+  "author": "alvisliu",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mr6pets/smartlitefetch.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Mr6pets/smartlitefetch/issues"
+  },
+  "homepage": "https://github.com/Mr6pets/smartlitefetch#readme",
+  "files": [
+    "src/",
+    "examples/",
+    "index.js",
+    "index.d.ts",
+    "types/",
+    "README.md",
+    "README.ch.md",
+    "README.en.md",
+    "LICENSE",
+    "tsconfig.json"
+  ],
+  "devDependencies": {
+    "@eslint/js": "^9.31.0",
+    "@types/node": "^20.0.0",
+    "cpy-cli": "^5.0.0",
+    "eslint": "^9.31.0",
+    "prettier": "^3.0.0",
+    "typescript": "^5.0.0"
+  },
+  "peerDependencies": {
+    "node-fetch": "^2.6.0 || ^3.0.0"
+  },
+  "peerDependenciesMeta": {
+    "node-fetch": {
+      "optional": true
+    }
+  },
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/Mr6pets"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "dependencies": {
+    "dotenv": "^17.2.0"
+  }
+}
