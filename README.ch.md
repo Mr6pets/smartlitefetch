@@ -19,6 +19,7 @@ pnpm add smartlitefetch
 ## 🔧 版本选择 Version Selection
 LiteFetch 2.0+ 支持两种模块系统：
 自动选择（推荐）
+
 ```bash
 // CommonJS 项目自动使用 v2 (node-fetch 2.x)
 const { get, post } = require('smartlitefetch');
@@ -201,6 +202,158 @@ try {
   }
 }
 ```
+
+### 🆕 新功能概览 - 突出显示 2.1+ 版本的新特性
+
+🔍 GraphQL 支持 - 详细的 GraphQL 使用指南
+🐛 调试和监控 - 调试模式和性能监控
+🔄 故障转移 - 高可用性配置
+🔧 中间件系统 - 请求/响应处理管道
+💾 高级缓存 - 缓存策略和标签管理
+🧪 测试和 Mock - 增强的测试功能
+📊 性能优化 - 最佳实践和性能建议
+
+#### GraphQL 支持 🆕
+
+```js
+// GraphQL 查询支持
+import { create, QueryBuilder } from 'smartlitefetch/v3';
+
+const client = create({
+  graphql: {
+    endpoint: 'https://api.example.com/graphql',
+    headers: {
+      'Authorization': 'Bearer your-token'
+    }
+  }
+});
+
+// 使用 GraphQL 查询
+const query = `
+  query GetUsers {
+    users {
+      id
+      name
+      email
+    }
+  }
+`;
+
+const result = await client.graphql(query);
+console.log(result.data.users);
+```
+
+#### 调试和监控功能 🆕
+
+```js
+// 启用调试模式
+const debugClient = create({
+  debug: true,
+  timeout: 5000
+});
+
+// 自动记录请求/响应信息
+// 性能监控
+// HAR 格式导出
+const response = await debugClient.get('/api/data');
+```
+
+#### 故障转移 (Failover) 🆕
+
+```js
+// 多个备用 URL 自动切换
+const client = create({
+  baseURLs: [
+    'https://api1.example.com',
+    'https://api2.example.com', 
+    'https://api3.example.com'
+  ],
+  failover: {
+    retries: 3,
+    timeout: 5000
+  }
+});
+
+// 自动尝试备用服务器
+const data = await client.get('/api/data');
+```
+
+#### 高级中间件系统 🆕
+
+```
+// 请求/响应中间件
+const client = create({
+  middleware: {
+    request: [
+      (config) => {
+        // 请求预处理
+        config.headers['X-Request-Time'] = Date.now();
+        return config;
+      }
+    ],
+    response: [
+      (response) => {
+        // 响应后处理
+        console.log('响应时间:', Date.now() - response.config.headers['X-Request-Time']);
+        return response;
+      }
+    ]
+  }
+});
+```
+
+#### 高级缓存系统 🆕
+
+```js
+// LRU 缓存 + Stale-While-Revalidate
+const data = await get('/api/data', {
+  cache: {
+    strategy: 'stale-while-revalidate',
+    maxAge: 300000,        // 5分钟
+    staleWhileRevalidate: 600000, // 10分钟
+    tags: ['users', 'api-data']
+  }
+});
+
+// 缓存标签管理
+client.cache.invalidateByTag('users');
+```
+
+
+
+#### Mock 测试增强 🆕
+
+```js
+// 高级 Mock 功能
+import { setupMocks } from 'smartlitefetch/v3';
+
+setupMocks(client, {
+  '/api/users': {
+    GET: { data: [{ id: 1, name: 'Test User' }] },
+    POST: (req) => ({ id: 2, ...req.body })
+  },
+  // 条件 Mock
+  '/api/data': {
+    condition: (req) => req.headers['X-Test-Mode'],
+    response: { mock: true }
+  }
+});
+```
+
+#### 流式处理支持 🆕
+
+```js
+// 流式响应处理
+const stream = await client.getStream('/api/large-data');
+stream.on('data', (chunk) => {
+  console.log('接收数据块:', chunk.length);
+});
+```
+
+
+
+
+
 ### 📝 注意事项 Notes
 
 #### V2 (CommonJS) 注意事项
