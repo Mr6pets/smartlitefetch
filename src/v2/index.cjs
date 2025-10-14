@@ -92,8 +92,16 @@ class LiteFetchV2 {
           if (config.body instanceof URLSearchParams) { // 支持 FormData-like
             fetchOptions.body = config.body.toString();
             fetchOptions.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+          } else if (Buffer.isBuffer(config.body)) {
+            fetchOptions.body = config.body;
+            // 二进制由调用方决定 Content-Type
+          } else if (typeof config.body === 'string') {
+            fetchOptions.body = config.body;
+            // 如果调用方未指定，则默认 'text/plain'
+            fetchOptions.headers['Content-Type'] ??= 'text/plain';
           } else if (typeof config.body === 'object') {
             fetchOptions.body = JSON.stringify(config.body);
+            fetchOptions.headers['Content-Type'] = 'application/json';
           } else {
             fetchOptions.body = config.body;
           }
@@ -141,13 +149,13 @@ class LiteFetchV2 {
 
   async post(url, data, options = {}) {
     return this.request(url, {
-        ...options,
-        method: 'POST',
-        body: typeof data === 'object' && data !== null ? JSON.stringify(data) : data,
-        headers: {
-            'Content-Type': 'application/json',
-            ...(options && options.headers)
-        }
+      ...options,
+      method: 'POST',
+      body: data,
+      headers: {
+        ...(options && options.headers),
+        // 当 body 为对象时，在 request 内部会设置为 application/json
+      }
     });
   }
 
